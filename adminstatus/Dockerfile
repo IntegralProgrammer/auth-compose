@@ -10,6 +10,7 @@ RUN apt-get -y install \
 COPY delete_expired_users.py /
 COPY delete_user.py /
 COPY list_users.py /
+COPY render_adminpage.py /
 
 COPY adminstatus.js /
 ENTRYPOINT nodejs /adminstatus.js
