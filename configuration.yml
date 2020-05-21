@@ -6,6 +6,9 @@ default_redirection_url: https://example.com:8443/adminstatus
 totp:
   issuer: authelia.com
 
+server:
+  path: authelia
+
 authentication_backend:
   disable_reset_password: true
   refresh_interval: 1m
