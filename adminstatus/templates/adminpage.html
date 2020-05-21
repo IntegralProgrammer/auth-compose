@@ -10,6 +10,7 @@
     </head>
     <body>
         <div class="container-fluid">
+            <p class="h1">Users</p>
             <table class="table">
                 <thead>
                     <tr>
@@ -19,8 +20,7 @@
                 </thead>
                 <tbody>
                     {% for user in users %}
-                    <tr class="bg-success"> 
-                        <!-- above needs to be a variable (dependent on diff between now and expiry date) -->
+                    <tr class="bg-{{user.status}}"> 
                         <td>{{user.name}}</td>
                         <td>{{user.expire}}</td>
                     </tr>
