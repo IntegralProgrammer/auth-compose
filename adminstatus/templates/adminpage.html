@@ -10,7 +10,7 @@
     </head>
     <body>
         <div class="container-fluid">
-            <p class="h1">Users</p>
+            <p class="h1">Authorized Users</p>
             <table class="table">
                 <thead>
                     <tr>
@@ -27,6 +27,10 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <!-- todo: finish post -->
+            <form action="adminstatus/confirm" method="post">
+                <button type="button" style="background:lightgrey" class="btn btn-block">Confirm Review</button>
+            </form>
         </div>
     </body>
 </html>
