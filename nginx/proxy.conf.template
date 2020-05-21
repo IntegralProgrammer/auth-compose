@@ -1,0 +1,49 @@
+server {
+	listen 443 ssl;
+	server_name $DOMAIN_NAME;
+	
+	ssl_certificate /etc/ssl/certs/cert.crt;
+	ssl_certificate_key /etc/ssl/private/cert.key;
+	
+	location / {
+		auth_request /authuser;
+		proxy_pass http://mockservice:3000/;
+	}
+	
+	location /phpldapadmin {
+		auth_request /authadmin;
+		proxy_pass http://phpldapadmin/phpldapadmin/;
+	}
+	
+	location /authelia {
+		proxy_pass http://authelia:9091/authelia/;
+	}
+	
+	location = /adminstatus {
+		auth_request /authadmin;
+		error_page 403 = @redirect_root;
+		proxy_pass http://adminstatus:3000/;
+	}
+	
+	location @redirect_root {
+		return 302 https://$DOMAIN_NAME/;
+	}
+	
+	location = /authuser {
+		internal;
+		proxy_pass http://authelia:9091/authelia/api/verify;
+		proxy_pass_request_body off;
+		proxy_set_header Content-Length "";
+		proxy_set_header X-Original-URL https://$DOMAIN_NAME/;
+		proxy_set_header Cookie authelia_session=$cookie_authelia_session;
+	}
+	
+	location = /authadmin {
+		internal;
+		proxy_pass http://authelia:9091/authelia/api/verify;
+		proxy_pass_request_body off;
+		proxy_set_header Content-Length "";
+		proxy_set_header X-Original-URL https://webadmin.$DOMAIN_NAME/;
+		proxy_set_header Cookie authelia_session=$cookie_authelia_session;
+	}
+}
