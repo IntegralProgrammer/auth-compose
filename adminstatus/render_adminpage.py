@@ -74,12 +74,13 @@ def render_adminpage(output_filename):
     user_info_string = json.dumps(users_to_send)
     message_bytes = user_info_string.encode('ascii')
     base64_bytes = base64.b64encode(message_bytes)
+    base64_message = base64_bytes.decode('ascii')
 
     if (exit_status != 0):
         on_error = dict(button_style="disabled", message="Warning: one or more users are improperly configured")
-        output_from_parsed_template = template.render(users=users, user_info=base64_bytes, error=on_error)
+        output_from_parsed_template = template.render(users=users, user_info=base64_message, error=on_error)
     else:
-        output_from_parsed_template = template.render(users=users, user_info=base64_bytes)
+        output_from_parsed_template = template.render(users=users, user_info=base64_message)
     
     # print(output_from_parsed_template)
 
