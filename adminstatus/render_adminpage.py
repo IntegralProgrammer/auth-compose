@@ -4,7 +4,7 @@
 import sys
 import datetime
 import json
-
+import base64
 import ldap
 from jinja2 import Environment, FileSystemLoader
 
@@ -70,14 +70,16 @@ def render_adminpage(output_filename):
             users.append(user)
             users_to_send.append([user_name, expire_string])
 
-    # convert to JSON to be sent
-    user_info = json.dumps(users_to_send)
+    # convert to JSON to bytes-like object to base64 bytes
+    user_info_string = json.dumps(users_to_send)
+    message_bytes = user_info_string.encode('ascii')
+    base64_bytes = base64.b64encode(message_bytes)
 
     if (exit_status != 0):
         on_error = dict(button_style="disabled", message="Warning: one or more users are improperly configured")
-        output_from_parsed_template = template.render(users=users, user_info=user_info, error=on_error)
+        output_from_parsed_template = template.render(users=users, user_info=base64_bytes, error=on_error)
     else:
-        output_from_parsed_template = template.render(users=users, user_info=user_info)
+        output_from_parsed_template = template.render(users=users, user_info=base64_bytes)
     
     # print(output_from_parsed_template)
 
