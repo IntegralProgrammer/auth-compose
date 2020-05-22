@@ -24,13 +24,15 @@ def parse_expiration_config(s):
 	s_month = int(s_date[1])
 	s_day = int(s_date[2])
 	return datetime.datetime(year=s_year, month=s_month, day=s_day)
-	
+
+exit_status = 0	
 con = ldap.initialize("ldap://" + LDAP_SERVER)
 con.simple_bind_s("cn=admin,dc=example,dc=org", "admin")
 res = con.search_s("dc=example,dc=org", ldap.SCOPE_SUBTREE, "uid=*")
-exit_status = 0
 
 def render_adminpage(output_filename):
+    exit_status = 0
+
     # load the adminpage template from the file system
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('adminpage.html')
@@ -40,10 +42,16 @@ def render_adminpage(output_filename):
 
     for r in res:
         user_name = r[1]['uid'][0].decode("utf-8")
+
+        #default to error styling
+        user_status="usererror"
+        user_expire = expire_string ="Improperly Configured"
+
         try:
             user_desc = r[1]['description'][0].decode("utf-8")
             user_expire = parse_expiration_config(user_desc)
             expire_string = user_expire.strftime("%Y-%m-%d %H:%M:%S")
+            
             # find diff between current date and expiry date
             time_delta = (user_expire - datetime.datetime.now()).days
             # push style to class
@@ -57,26 +65,32 @@ def render_adminpage(output_filename):
             print("Improper configuration for user: {}".format(user_name))
             exit_status = 1
             continue
-        user = dict(name=user_name, expire=user_expire, status=user_status)
-        users.append(user)
-        users_to_send.append([user_name, expire_string])
+        finally:
+            user = dict(name=user_name, expire=user_expire, status=user_status)
+            users.append(user)
+            users_to_send.append([user_name, expire_string])
 
     # convert to JSON to be sent
     user_info = json.dumps(users_to_send)
 
-    output_from_parsed_template = template.render(users=users, user_info=user_info)
+    if (exit_status != 0):
+        on_error = dict(button_style="disabled", message="Warning: one or more users are improperly configured")
+        output_from_parsed_template = template.render(users=users, user_info=user_info, error=on_error)
+    else:
+        output_from_parsed_template = template.render(users=users, user_info=user_info)
+    
     # print(output_from_parsed_template)
 
     # save the results in output_filename
     with open(output_filename, "w") as fh:
         fh.write(output_from_parsed_template)
     
+    if (exit_status != 0):
+        print("There were improperly configured users")
+    sys.exit(exit_status)
+    
 def main():
     render_adminpage(output_filename)
 
 if __name__ == "__main__":
     main()
-
-if (exit_status != 0):
-    print("There were improperly configured users")
-sys.exit(exit_status)
