@@ -10,7 +10,6 @@ from jinja2 import Environment, FileSystemLoader
 
 LDAP_SERVER = sys.argv[1]
 output_filename = sys.argv[2]
-output_filename = "test.txt"
 
 def parse_expiration_config(s):
 	s_split = s.split(' ')
@@ -33,7 +32,6 @@ exit_status = 0
 
 def render_adminpage(output_filename):
     # load the adminpage template from the file system
-    # not sure if this should go in function or not
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('adminpage.html')
     users = []
@@ -45,6 +43,7 @@ def render_adminpage(output_filename):
         try:
             user_desc = r[1]['description'][0].decode("utf-8")
             user_expire = parse_expiration_config(user_desc)
+            expire_string = user_expire.strftime("%Y-%m-%d %H:%M:%S")
             # find diff between current date and expiry date
             time_delta = (user_expire - datetime.datetime.now()).days
             # push style to class
@@ -62,43 +61,16 @@ def render_adminpage(output_filename):
         users.append(user)
         users_to_send.append([user_name, expire_string])
 
-    # # to test html styling
-    # for i in range(1, 9):
-    #     i = str(i)
-    #     user_name = "test" + i
-    #     try:
-    #         user_expire = parse_expiration_config("expires: 2020/0" + i + "/23")
-    #         expire_string = user_expire.strftime("%Y-%m-%d %H:%M:%S")
-    #         # find diff between current date and expiry date
-    #         time_delta = (user_expire - datetime.datetime.now()).days
-    #         # push style to class
-    #         if time_delta < 0:
-    #             user_status="danger"
-    #         elif 0 <= time_delta < 7:
-    #             user_status="warning"
-    #         else:
-    #             user_status="success"
-    #     except:
-    #         print("Improper configuration for user: {}".format(user_name))
-    #         exit_status = 1
-    #         continue
-    #     user = dict(name=user_name, expire=user_expire, status=user_status)
-    #     users.append(user)
-    #     users_to_send.append([user_name, expire_string])
+    # convert to JSON to be sent
+    user_info = json.dumps(users_to_send)
 
-    # # end of testing html style
-
-    output_from_parsed_template = template.render(users=users)
+    output_from_parsed_template = template.render(users=users, user_info=user_info)
     # print(output_from_parsed_template)
 
     # save the results in output_filename
     with open(output_filename, "w") as fh:
         fh.write(output_from_parsed_template)
     
-    # todo: how to use this json
-    test = json.dumps(users_to_send)
-    print(test)
-
 def main():
     render_adminpage(output_filename)
 

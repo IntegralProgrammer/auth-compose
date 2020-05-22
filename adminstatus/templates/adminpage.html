@@ -27,9 +27,9 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <!-- todo: finish post -->
-            <form action="adminstatus/confirm" method="post">
-                <button type="button" style="background:lightgrey" class="btn btn-block">Confirm Review</button>
+            <form action="/adminstatus/confirm" method="post">
+                <input type="hidden" id="users" name="users" value={{ user_info }}>
+                <button type="submit" style="background:lightgrey" class="btn btn-block">Confirm Review</button>
             </form>
         </div>
     </body>
