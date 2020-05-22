@@ -19,10 +19,10 @@ server {
 		proxy_pass http://authelia:9091/authelia/;
 	}
 	
-	location = /adminstatus {
+	location /adminstatus {
 		auth_request /authadmin;
 		error_page 403 = @redirect_root;
-		proxy_pass http://adminstatus:3000/;
+		proxy_pass http://adminstatus:3000;
 	}
 	
 	location @redirect_root {
