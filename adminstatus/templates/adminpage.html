@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Authorized Users</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/bootstrap.min.css">
+        <script src="/jquery.min.js"></script>
+        <script src="/bootstrap.min.js"></script>
+        <style>
+            .usererror {
+                border-style:solid;
+                border-color:red
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <p class="h1">Authorized Users</p>
+            {% if error %}
+                <p class="h2">{{ error.message }}</p>
+            {% endif %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Expiry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                <tr class="{{user.status}}"> 
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.expire }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <form action="/adminstatus/confirm" method="post">
+                <input type="hidden" id="users" name="users" value="{{ user_info }}">
+                <button 
+                    type="submit" 
+                    style="background:lightgrey" 
+                    class="btn btn-block"
+                    {% if error %}
+                    {{ error.button_style }}
+                    {% endif %}
+                >
+                    Confirm Review
+                </button>
+            </form>
+        </div>
+    </body>
+</html>
