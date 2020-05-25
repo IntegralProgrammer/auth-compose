@@ -9,10 +9,11 @@ import base64
 import ldap
 from jinja2 import Environment, FileSystemLoader
 
+AUDIT_LOGFILE_PATH = "/var/log/render_adminpage.log"
 LDAP_SERVER = sys.argv[1]
 output_filename = sys.argv[2]
 
-logging.basicConfig(format='%(levelname)s: %(asctime)s - %(message)s', level=logging.INFO)
+logging.basicConfig(filename=AUDIT_LOGFILE_PATH, filemode='a', format='%(levelname)s: %(asctime)s - %(message)s', level=logging.INFO)
 
 def parse_expiration_config(s):
 	s_split = s.split(' ')
@@ -98,6 +99,7 @@ def render_adminpage(output_filename):
     
 def main():
     render_adminpage(output_filename)
+    logging.shutdown()
 
 if __name__ == "__main__":
     main()
