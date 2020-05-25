@@ -24,11 +24,15 @@ app.post('/adminstatus/confirm', function(req, res) {
 		postData += d;
 	});
 	req.on('end', function() {
-		console.log("=== BEGIN AUTHORIZED USERS (" + new Date() + ") ===");
 		var urlDecoded = querystring.decode(postData);
 		var listBuffer = new Buffer(urlDecoded.users, 'base64');
-		console.log(listBuffer.toString('ascii'));
-		console.log("=== END AUTHORIZED USERS ===");
+		var postDataJson = JSON.parse(listBuffer.toString('ascii'));
+		var logMessage = "[";
+		logMessage += new Date().toString();
+		logMessage += "] ";
+		logMessage += JSON.stringify(postDataJson);
+		logMessage += "\n";
+		fs.appendFileSync('/var/log/adminstatus.log', logMessage);
 		res.status(200);
 		res.send("Authorized users confirmed");
 		fs.unlinkSync('/var/usersaudit/review_required');
