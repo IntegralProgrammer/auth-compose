@@ -15,5 +15,7 @@ COPY list_users.py /
 COPY render_adminpage.py /
 COPY templates /templates
 
+RUN mkdir /var/usersaudit
+
 COPY adminstatus.js /
 ENTRYPOINT nodejs /adminstatus.js

@@ -7,9 +7,15 @@ const app = express();
 const server = http.createServer(app);
 
 app.get('/adminstatus', function(req, res) {
-	res.status(200);
-	res.type('html');
-	res.send(fs.readFileSync("/users_table.html"));
+	//Is a authorized users review required?
+	if (fs.existsSync('/var/usersaudit/review_required')) {
+		res.status(200);
+		res.type('html');
+		res.send(fs.readFileSync("/users_table.html"));
+	}
+	else {
+		res.redirect('/');
+	}
 });
 
 app.post('/adminstatus/confirm', function(req, res) {
@@ -25,6 +31,7 @@ app.post('/adminstatus/confirm', function(req, res) {
 		console.log("=== END AUTHORIZED USERS ===");
 		res.status(200);
 		res.send("Authorized users confirmed");
+		fs.unlinkSync('/var/usersaudit/review_required');
 	});
 });
 
