@@ -29,7 +29,6 @@ def parse_expiration_config(s):
 	s_day = int(s_date[2])
 	return datetime.datetime(year=s_year, month=s_month, day=s_day)
 
-exit_status = 0	
 con = ldap.initialize("ldap://" + LDAP_SERVER)
 con.simple_bind_s("cn=admin,dc=example,dc=org", "admin")
 res = con.search_s("dc=example,dc=org", ldap.SCOPE_SUBTREE, "uid=*")
@@ -95,11 +94,15 @@ def render_adminpage(output_filename):
     
     if (exit_status != 0):
         print("There were improperly configured users")
-    sys.exit(exit_status)
+    return exit_status
     
 def main():
-    render_adminpage(output_filename)
+    exit_status = render_adminpage(output_filename)
     logging.shutdown()
+    if exit_status is not None:
+        sys.exit(exit_status)
+    else:
+        sys.exit(-1)
 
 if __name__ == "__main__":
     main()
