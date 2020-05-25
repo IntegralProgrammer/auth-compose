@@ -3,6 +3,7 @@
 
 import sys
 import datetime
+import logging
 import json
 import base64
 import ldap
@@ -10,6 +11,8 @@ from jinja2 import Environment, FileSystemLoader
 
 LDAP_SERVER = sys.argv[1]
 output_filename = sys.argv[2]
+
+logging.basicConfig(format='%(levelname)s: %(asctime)s - %(message)s', level=logging.INFO)
 
 def parse_expiration_config(s):
 	s_split = s.split(' ')
@@ -76,6 +79,7 @@ def render_adminpage(output_filename):
     base64_bytes = base64.b64encode(message_bytes)
     base64_message = base64_bytes.decode('ascii')
 
+    logging.info("Rendering a page with users: {}".format(users))
     if (exit_status != 0):
         on_error = dict(button_style="disabled", message="Warning: one or more users are improperly configured")
         output_from_parsed_template = template.render(users=users, user_info=base64_message, error=on_error)
