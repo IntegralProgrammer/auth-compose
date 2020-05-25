@@ -19,6 +19,18 @@ server {
 		proxy_pass http://authelia:9091/authelia/;
 	}
 	
+	location = /bootstrap.min.css {
+		root /var/www/;
+	}
+	
+	location = /bootstrap.min.js {
+		root /var/www/;
+	}
+	
+	location = /jquery.min.js {
+		root /var/www/;
+	}
+	
 	location /adminstatus {
 		auth_request /authadmin;
 		error_page 403 = @redirect_root;
