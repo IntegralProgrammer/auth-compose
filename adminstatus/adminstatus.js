@@ -1,6 +1,8 @@
 const fs = require('fs');
 const http = require('http');
 const express = require('express');
+const querystring = require('querystring');
+
 const app = express();
 const server = http.createServer(app);
 
@@ -16,7 +18,11 @@ app.post('/adminstatus/confirm', function(req, res) {
 		postData += d;
 	});
 	req.on('end', function() {
-		console.log("Authorized Users: " + postData);
+		console.log("=== BEGIN AUTHORIZED USERS (" + new Date() + ") ===");
+		var urlDecoded = querystring.decode(postData);
+		var listBuffer = new Buffer(urlDecoded.users, 'base64');
+		console.log(listBuffer.toString('ascii'));
+		console.log("=== END AUTHORIZED USERS ===");
 		res.status(200);
 		res.send("Authorized users confirmed");
 	});
