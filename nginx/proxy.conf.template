@@ -7,7 +7,12 @@ server {
 	
 	location / {
 		auth_request /authuser;
+		error_page 401 = @redirect_authelia;
 		proxy_pass http://mockservice:3000/;
+	}
+	
+	location @redirect_authelia {
+		return 302 https://$DOMAIN_NAME/authelia;
 	}
 	
 	location /phpldapadmin {
