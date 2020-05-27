@@ -34,7 +34,8 @@ app.post('/adminstatus/confirm', function(req, res) {
 		logMessage += "\n";
 		fs.appendFileSync('/var/log/adminstatus.log', logMessage);
 		res.status(200);
-		res.send("Authorized users confirmed");
+		res.type('html');
+		res.send(fs.readFileSync("/authorized_users_confirmed.html"));
 		fs.unlinkSync('/var/usersaudit/review_required');
 	});
 });
