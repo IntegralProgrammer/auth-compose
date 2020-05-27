@@ -17,10 +17,12 @@ COPY render_adminpage.py /
 COPY templates /templates
 COPY crontab /etc/cron.d/simple-cron
 COPY audit_required.sh /
+COPY auto_delete.sh /
 COPY authorized_users_confirmed.html /
 
 RUN chmod 0644 /etc/cron.d/simple-cron
 RUN chmod +x /audit_required.sh
+RUN chmod +x /auto_delete.sh
 RUN mkdir /var/usersaudit
 
 COPY adminstatus.js /
