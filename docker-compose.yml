@@ -11,7 +11,7 @@ services:
       PHPLDAPADMIN_HTTPS: "false"
       PHPLDAPADMIN_SERVER_PATH: "/phpldapadmin"
     ports:
-      - "127.0.0.1:8080:80"
+      - "127.0.0.1:8000:80"
   authelia:
     image: authelia/authelia
     volumes:
@@ -23,4 +23,4 @@ services:
   nginx:
     build: nginx
     ports:
-      - "8443:443"
+      - "443:443"
