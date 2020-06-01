@@ -11,7 +11,7 @@ server {
 		proxy_pass http://mockservice:3000/;
 		
 		location /dwv/ {
-			proxy_pass http://${DOCKER_HOST_IP}:8080/
+			proxy_pass http://${DOCKER_HOST_IP}:8080/;
 		}
 	}
 	
