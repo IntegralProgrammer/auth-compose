@@ -18,6 +18,8 @@ services:
       - ./configuration.yml:/etc/authelia/configuration.yml:ro
   adminstatus:
     build: adminstatus
+    volumes:
+      - ./log_adminstatus:/var/log/
   nginx:
     build: nginx
     ports:
