@@ -18,8 +18,6 @@ services:
       - ./configuration.yml:/etc/authelia/configuration.yml:ro
   adminstatus:
     build: adminstatus
-  mockservice:
-    build: mockservice
   nginx:
     build: nginx
     ports:
