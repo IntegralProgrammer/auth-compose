@@ -23,6 +23,12 @@ server {
 		return 302 https://$DOMAIN_NAME/authelia;
 	}
 	
+	location /eshpf {
+		auth_basic "Authentication required";
+		auth_basic_user_file /.htpasswd;
+		proxy_pass http://${DOCKER_HOST_IP}:9200/;
+	}
+	
 	location /phpldapadmin {
 		auth_request /authadmin;
 		proxy_pass http://phpldapadmin/phpldapadmin/;

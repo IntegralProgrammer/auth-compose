@@ -30,6 +30,7 @@ services:
     volumes:
       - /etc/cert/star_ccm_sickkids_ca.crt:/etc/ssl/certs/cert.crt:ro
       - /etc/cert/star_ccm_sickkids_ca.key:/etc/ssl/private/cert.key:ro
+      - ./.htpasswd:/.htpasswd:ro
 
 networks:
   default:
