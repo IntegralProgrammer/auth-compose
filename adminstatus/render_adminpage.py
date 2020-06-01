@@ -60,7 +60,7 @@ def render_adminpage(output_filename):
             # push style to class
             if time_delta < 0:
                 user_status="danger"
-            elif 0 <= time_delta < 7:
+            elif 0 <= time_delta < 40:
                 user_status="warning"
             else:
                 user_status="success"
