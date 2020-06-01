@@ -35,8 +35,8 @@ access_control:
 session:
   name: authelia_session
   secret: $SESSION_SECRET
-  expiration: 3600
-  inactivity: 300
+  expiration: 7200
+  inactivity: 1200
   domain: $DOMAIN_NAME
 
 regulation:
