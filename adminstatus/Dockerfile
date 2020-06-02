@@ -9,7 +9,7 @@ RUN apt-get -y install \
 	python3-ldap \
 	python3-pip
 
-RUN pip3 install jinja2
+RUN pip3 install 'jinja2==2.11.2'
 COPY delete_expired_users.py /
 COPY delete_user.py /
 COPY list_users.py /
