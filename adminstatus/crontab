@@ -1,2 +1,2 @@
-* * * * * root /audit_required.sh
+0 0 15 * * root /audit_required.sh
 0 12 * * * root /auto_delete.sh
