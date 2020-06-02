@@ -23,7 +23,7 @@ server {
 		return 302 https://$DOMAIN_NAME/authelia;
 	}
 	
-	location /eshpf {
+	location /eshpf/ {
 		auth_basic "Authentication required";
 		auth_basic_user_file /.htpasswd;
 		proxy_pass http://${DOCKER_HOST_IP}:9200/;
